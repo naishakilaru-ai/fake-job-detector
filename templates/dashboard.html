@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Job Detector Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            background:#f4f7fc;
+        }
+
+        .header{
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            color:white;
+            text-align:center;
+            padding:25px;
+        }
+
+        .header h1{
+            font-size:32px;
+        }
+
+        .container{
+            width:90%;
+            margin:30px auto;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            text-align:center;
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        .card h2{
+            font-size:35px;
+            margin-bottom:10px;
+        }
+
+        .section{
+            background:white;
+            margin-top:25px;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .section h2{
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        .chart-container{
+            width:100%;
+            max-width:650px;
+            margin:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        th{
+            background:#667eea;
+            color:white;
+        }
+
+        th,td{
+            border:1px solid #ddd;
+            padding:12px;
+            text-align:center;
+        }
+
+        tr:nth-child(even){
+            background:#f8f8f8;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:20px;
+            padding:12px 20px;
+            background:#667eea;
+            color:white;
+            text-decoration:none;
+            border-radius:8px;
+        }
+
+        .btn:hover{
+            background:#5568d8;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>📊 Fake Job Detector Analytics Dashboard</h1>
+</div>
+
+<div class="container">
+
+    <!-- Statistics Cards -->
+
+    <div class="cards">
+
+        <div class="card">
+            <h2>{{ total_scans }}</h2>
+            <p>📁 Total Scans</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ genuine_jobs }}</h2>
+            <p>✅ Genuine Jobs</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ review_jobs }}</h2>
+            <p>🟡 Manual Review</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ fake_jobs }}</h2>
+            <p>🚨 Suspicious/Fake</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ avg_risk }}</h2>
+            <p>⚠ Average Risk Score</p>
+        </div>
+
+    </div>
+
+    <!-- Pie Chart -->
+
+    <div class="section">
+
+        <h2>🥧 Job Classification Distribution</h2>
+
+        <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- Bar Chart -->
+
+    <div class="section">
+
+        <h2>📈 Job Detection Statistics</h2>
+
+        <div class="chart-container">
+            <canvas id="barChart"></canvas>
+        </div>
+
+    </div>
+
+    <!-- History Table -->
+
+    <div class="section">
+
+        <h2>📋 Recent Scan History</h2>
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Verdict</th>
+                <th>Fake %</th>
+                <th>Genuine %</th>
+                <th>Date</th>
+            </tr>
+
+            {% for row in history %}
+
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td>{{ row[5] }}</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <a href="/" class="btn">
+            ← Back To Detector
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+
+const totalScans = Number("{{ total_scans }}");
+const fakeJobs = Number("{{ fake_jobs }}");
+const reviewJobs = Number("{{ review_jobs }}");
+const genuineJobs = Number("{{ genuine_jobs }}");
+
+
+// PIE CHART
+
+const pieCanvas = document.getElementById("pieChart");
+
+new Chart(pieCanvas, {
+    type: "pie",
+    data: {
+        labels: [
+            "Suspicious/Fake",
+            "Manual Review",
+            "Genuine"
+        ],
+        datasets: [{
+            data: [
+                fakeJobs,
+                reviewJobs,
+                genuineJobs
+            ]
+        }]
+    }
+});
+
+
+// BAR CHART
+
+const barCanvas = document.getElementById("barChart");
+
+new Chart(barCanvas, {
+    type: "bar",
+    data: {
+        labels: [
+            "Suspicious/Fake",
+            "Manual Review",
+            "Genuine"
+        ],
+        datasets: [{
+            label: "Number of Jobs",
+            data: [
+                fakeJobs,
+                reviewJobs,
+                genuineJobs
+            ]
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+
+</script>
+
+</body>
+</html>
+

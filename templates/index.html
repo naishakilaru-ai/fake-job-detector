@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Job Shield | Fake Job Detector</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#0f172a,#1e1b4b,#312e81);
+    padding:40px 20px;
+    color:white;
+    transition:0.4s;
+}
+
+.top-bar{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+textarea{
+    width:100%;
+    height:200px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+textarea::placeholder{
+    color:#cbd5e1;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(90deg,#6366f1,#22c55e);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.02);
+}
+
+.theme-btn{
+    width:auto;
+    padding:10px 18px;
+    background:linear-gradient(90deg,#f59e0b,#ef4444);
+}
+.file-upload-wrapper{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:10px;
+    margin-bottom:15px;
+}
+
+.file-btn{
+    background:linear-gradient(90deg,#6366f1,#22c55e);
+    color:white;
+    padding:12px 20px;
+    border-radius:12px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    display:inline-block;
+}
+
+.file-btn:hover{
+    transform:scale(1.02);
+}
+
+#file-name{
+    color:#cbd5e1;
+    font-size:14px;
+}
+.card{
+    background:rgba(255,255,255,0.08);
+    border-radius:16px;
+    padding:18px;
+    margin-top:15px;
+    backdrop-filter:blur(15px);
+}
+
+.prediction{
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+.bar{
+    width:100%;
+    height:22px;
+    background:rgba(255,255,255,0.15);
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.fake-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#ef4444,#f97316);
+    text-align:center;
+    line-height:22px;
+    animation:growBar 1.5s ease forwards;
+}
+
+.genuine-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#22c55e,#06b6d4);
+    text-align:center;
+    line-height:22px;
+    animation:growBar 1.5s ease forwards;
+}
+
+@keyframes growBar{
+    from{width:0;}
+}
+
+.analytics-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-top:15px;
+}
+
+.analytics-card{
+    background:rgba(255,255,255,0.08);
+    padding:15px;
+    border-radius:14px;
+    text-align:center;
+}
+
+.analytics-card h2{
+    color:#38bdf8;
+}
+
+.dashboard-btn{
+    background:linear-gradient(90deg,#8b5cf6,#06b6d4);
+}
+
+.loader{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    z-index:9999;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+.spinner{
+    width:60px;
+    height:60px;
+    border:6px solid rgba(255,255,255,0.3);
+    border-top:6px solid #38bdf8;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:15px;
+}
+
+@keyframes spin{
+    100%{transform:rotate(360deg);}
+}
+
+.toast{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#22c55e;
+    color:white;
+    padding:14px 20px;
+    border-radius:10px;
+    opacity:0;
+    transition:0.4s;
+}
+
+.toast.show{
+    opacity:1;
+}
+
+.result{
+    animation:fadeIn .8s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+.light-mode{
+    background:linear-gradient(135deg,#f8fafc,#dbeafe,#bfdbfe);
+    color:#111827;
+}
+
+.light-mode .container,
+.light-mode .card,
+.light-mode .analytics-card{
+    background:rgba(255,255,255,0.8);
+    color:#111827;
+}
+
+.light-mode textarea{
+    background:white;
+    color:black;
+}
+
+@media(max-width:768px){
+    .analytics-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:480px){
+    .analytics-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    <button onclick="toggleTheme()" class="theme-btn">🌙 Toggle Theme</button>
+</div>
+
+<div id="loader" class="loader">
+    <div class="spinner"></div>
+    <p>AI analyzing job posting...</p>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div class="container">
+
+<h1>🛡 AI Job Shield — Fake Job Detector</h1>
+
+<form action="/predict" method="POST" enctype="multipart/form-data">
+<textarea name="job_text" placeholder="Paste job description to analyze..."></textarea>
+<br><br>
+
+<label>📄 Upload Job Description (PDF,DOCX)</label>
+<div class="file-upload-wrapper">
+    <input
+        type="file"
+        id="job_file"
+        name="job_file"
+        accept=".pdf,.docx"
+        hidden
+    >
+    
+    <label for="job_file" class="file-btn">
+        📄 Choose File
+    </label>
+
+    <span id="file-name">No file chosen</span>
+</div>
+
+<button type="submit">
+    Analyze Job Posting
+</button>
+</form>
+
+{% if prediction %}
+<div class="result">
+
+<div class="prediction">{{ prediction }}</div>
+
+<div class="card">
+<h3>🚨 Fake Probability</h3>
+<div class="bar">
+<div class="fake-bar" id="fakeBar">{{ fake_prob }}%</div>
+</div>
+</div>
+
+<div class="card">
+<h3>✅ Genuine Probability</h3>
+<div class="bar">
+<div class="genuine-bar" id="genuineBar">{{ genuine_prob }}%</div>
+</div>
+</div>
+
+<div class="card">
+<h3>🛡 Risk Score</h3>
+<p>{{ risk_score }}/100</p>
+</div>
+
+<div class="card">
+<h3>🚨 Scam Pattern Detection</h3>
+
+{% if scam_patterns %}
+<ul>
+{% for pattern, score in scam_patterns %}
+<li>{{ pattern }} (+{{ score }} risk)</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No major scam patterns detected.</p>
+{% endif %}
+
+</div>
+
+<div class="card">
+<h3>🎯 Confidence Score</h3>
+<p>{{ confidence }}%</p>
+<p><b>{{ confidence_level }}</b></p>
+</div>
+
+<div class="card">
+    <h3>🔍 AI Explanation Engine</h3>
+
+    <ul>
+    {% for reason in reasons %}
+        <li>{{ reason }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>🚨 Fraud Categories Detected</h3>
+
+    <ul>
+    {% for category in fraud_categories %}
+        <li>{{ category }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>🌐 URL Analysis</h3>
+
+    <ul>
+    {% for item in url_results %}
+        <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>📧 Email Verification</h3>
+
+    <ul>
+    {% for item in email_results %}
+        <li>{{ item }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+<h3>📊 Live SaaS Analytics</h3>
+
+<div class="analytics-grid">
+<div class="analytics-card"><h2>{{ total_scans }}</h2><p>Total Scans</p></div>
+<div class="analytics-card"><h2>{{ genuine_jobs }}</h2><p>Genuine Jobs</p></div>
+<div class="analytics-card"><h2>{{ review_jobs }}</h2><p>Manual Review</p></div>
+<div class="analytics-card"><h2>{{ fake_jobs }}</h2><p>Fake Jobs</p></div>
+</div>
+
+<button type="button" class="dashboard-btn" onclick="window.location.href='/dashboard'">
+📊 Open Full Dashboard
+</button>
+
+<button
+    type="button"
+    class="dashboard-btn"
+    onclick="window.location.href='/download_report'">
+    📥 Download Analysis Report
+</button>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<script>
+function toggleTheme(){
+    document.body.classList.toggle("light-mode");
+    localStorage.setItem("theme",
+    document.body.classList.contains("light-mode") ? "light" : "dark");
+}
+
+window.onload=function(){
+
+    if(localStorage.getItem("theme")==="light"){
+        document.body.classList.add("light-mode");
+    }
+
+    const predictionExists = "{{ prediction|default('') }}";
+
+    if(predictionExists){
+        showToast("✅ Analysis Complete");
+    }
+
+    let fake="{{ fake_prob|default(0) }}";
+    let genuine="{{ genuine_prob|default(0) }}";
+
+    let fb=document.getElementById("fakeBar");
+    let gb=document.getElementById("genuineBar");
+
+    if(fb) fb.style.width=fake+"%";
+    if(gb) gb.style.width=genuine+"%";
+}
+
+document.querySelector("form").addEventListener("submit",function(){
+    document.getElementById("loader").style.display="flex";
+});
+
+function showToast(message){
+    let toast=document.getElementById("toast");
+    toast.innerHTML=message;
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },3000);
+}
+const fileInput = document.getElementById("job_file");
+
+if(fileInput){
+    fileInput.addEventListener("change", function(){
+        document.getElementById("file-name").textContent =
+            this.files.length
+            ? this.files[0].name
+            : "No file chosen";
+    });
+}
+</script>
+
+</body>
+</html>
