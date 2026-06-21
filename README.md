@@ -153,7 +153,7 @@ http://127.0.0.1:5000
 The application is deployed on Render.
 
 Live Demo:
-(https://fake-job-detector-nw30.onrender.com/predict)
+(https://fake-job-detector-nw30.onrender.com/))
 
 ---
 
