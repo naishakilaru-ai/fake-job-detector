@@ -10,22 +10,22 @@ The project aims to help job seekers identify suspicious recruitment activities 
 
 ## Features
 
-### 🤖 Machine Learning Classification
+###  Machine Learning Classification
 
 * Classifies job postings as Genuine or Potentially Fraudulent.
 * Provides Fake Probability and Genuine Probability scores.
 
-### 🎯 Risk & Confidence Analysis
+###  Risk & Confidence Analysis
 
 * Generates Risk Score (0–100).
 * Displays Confidence Score and Confidence Level.
 
-### 🔍 Explainable AI
+###  Explainable AI
 
 * Highlights suspicious indicators detected in the job description.
 * Improves transparency of model predictions.
 
-### 🚨 Fraud Category Detection
+###  Fraud Category Detection
 
 Detects common recruitment scam categories:
 
@@ -34,22 +34,22 @@ Detects common recruitment scam categories:
 * Fake Recruiter
 * Phishing Scam
 
-### 🌐 URL Analysis
+###  URL Analysis
 
 * Identifies suspicious URLs.
 * Detects shortened links such as bit.ly and tinyurl.
 
-### 📧 Email Verification
+###  Email Verification
 
 * Verifies recruitment email domains.
 * Flags free email providers used in suspicious job postings.
 
-### 📄 Document Upload Support
+###  Document Upload Support
 
 * Upload and analyze PDF job descriptions.
 * Upload and analyze DOCX job descriptions.
 
-### 📊 Analytics Dashboard
+###  Analytics Dashboard
 
 * Total Scans
 * Genuine Jobs
@@ -57,7 +57,7 @@ Detects common recruitment scam categories:
 * Manual Review Cases
 * Historical Analysis Data
 
-### 📥 Professional PDF Report
+###  Professional PDF Report
 
 * Generates downloadable analysis reports.
 * Includes verdict, risk score, confidence score, and AI explanations.
